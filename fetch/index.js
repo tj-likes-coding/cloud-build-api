@@ -54,6 +54,7 @@ exports.fetchFileList = (req, res) => {
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) console.log(err);
       if(result.length > 0) {
+        console.log(pkgname, author, appname);
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
               console.log(row);
