@@ -33,17 +33,43 @@ exports.fetchGitFile = (req, res) => {
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
-    let json = fs.readFileSync("../db.txt", "utf-8", (data) => {return data;});
-    json = JSON.parse(json);
-    let data = json[pkgname];
-    
-    if( data.author === author && data.appname === appname ) {
-        fetch(data.repo+"/"+req.params.filename).then((response) => {
-            res.json({
-                data: response.text()
-            });
+    let data;
+    con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
+    if (err) console.log(err);
+      if(result.length > 0) {
+        result.forEach(row => {
+          if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
+              data = row;
+          }
         });
+      } else {
+        throw "Package Not Found!";
+      }
+    });
+  
+    const request = require('request');
+
+    const URL = data.repo + "/" + req.params.filename;
+    const TOKEN = data.token;
+
+    var options = {
+      url: URL,
+      headers: {
+        'Authorization': 'token ' + TOKEN
+      }
+    };
+
+    function callback(error, response, body) {
+//           console.log(response.statusCode);
+//           console.error(error);
+//           console.log(body);
+       res.json({
+        data: body
+       });
+      res.end();
     }
+
+    request(options, callback);
 }
 
 exports.fetchFileList = (req, res) => {
@@ -54,7 +80,6 @@ exports.fetchFileList = (req, res) => {
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) console.log(err);
       if(result.length > 0) {
-        console.log(pkgname, author, appname);
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
               res.json(row);
