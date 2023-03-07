@@ -1,0 +1,10 @@
+{
+    "com.toonspace3d": {
+        "appname": "ToonSpace 3D",
+        "author": "Tejas Nayak",
+        "token": "abcdefg",
+        "main": "main.js",
+        "repo": "https://github.com/tj-likes-coding/testrepo",
+        "files": ["hi.js"]
+    }
+}
