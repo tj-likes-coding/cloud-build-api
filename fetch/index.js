@@ -40,7 +40,7 @@ exports.fetchGitFile = (req, res) => {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
             const TOKEN = row.token;  
-            const URL = row.repo + "/" + req.params.filename + "?token=" + TOKEN;
+            const URL = row.repo + "/" + req.params.filename;
 
               function callback(response) {
                  res.json({
@@ -49,7 +49,11 @@ exports.fetchGitFile = (req, res) => {
                 res.end();
               }
 
-              fetch(URL).then((response) => {
+              fetch(URL, {
+                headers: {
+                  Authorization: "token " + TOKEN
+                }
+              }).then((response) => {
                 callback(response);
               });
           }
