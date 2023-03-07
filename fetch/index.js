@@ -41,9 +41,9 @@ exports.fetchFileList = (req, res) => {
     let json = fs.readFileSync("../db.txt", "utf-8", (data) => {return data;});
     json = JSON.parse(json);
     res.json(json);
-//     let data = json[pkgname];
+    let data = json[pkgname];
     
-//     if( data.author === author && data.appname === appname ) {
-//         res.json(data.files);
-//     }
+    if( data.author === author && data.appname === appname ) {
+        res.json(data.files);
+    }
 }
