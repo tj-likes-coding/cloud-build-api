@@ -26,6 +26,7 @@ exports.fetchGit = (req, res) => {
             res.json({
                 data: response.text()
             });
+          res.end();
         });
     }
 }
@@ -43,6 +44,7 @@ exports.fetchGitFile = (req, res) => {
             const URL = row.repo + "/" + req.params.filename;
 
               function callback(response) {
+                console.log(response);
                  res.json({
                   data: response.text()
                  });
