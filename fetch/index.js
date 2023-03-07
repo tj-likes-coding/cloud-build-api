@@ -1,5 +1,6 @@
 const fs = require("fs");
 var mysql = require('mysql');
+const fetch = require("node-fetch");
 
 var con = mysql.createConnection({
   host: "sql.freedb.tech",
