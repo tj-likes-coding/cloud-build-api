@@ -24,4 +24,13 @@ app.route("/fetch")
         fetchGit(req, res);
     })
 
+app.route("/fetchList")
+    .get((req, res) => {
+        if(req.headers['kindred'] !== "cloud-build") {
+            res.statusCode = 404;
+            res.end();
+        }
+        fetchFileList(req, res);
+    })
+
 app.listen(port, () => {  console.log('We are live on ' + port);});
