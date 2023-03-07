@@ -35,6 +35,7 @@ exports.fetchGitFile = (req, res) => {
 }
 
 exports.fetchFileList = (req, res) => {
+    console.log(__dirname);
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
