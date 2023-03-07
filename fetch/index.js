@@ -46,30 +46,24 @@ exports.fetchGitFile = (req, res) => {
         throw "Package Not Found!";
       }
     });
-  
-    const request = require('request');
 
     const URL = data.repo + "/" + req.params.filename;
     const TOKEN = data.token;
 
-    var options = {
-      url: URL,
-      headers: {
-        'Authorization': 'token ' + TOKEN
-      }
-    };
-
-    function callback(error, response, body) {
-//           console.log(response.statusCode);
-//           console.error(error);
-//           console.log(body);
+    function callback(res) {
        res.json({
         data: body
        });
       res.end();
     }
 
-    request(options, callback);
+    fetch(URL, {
+      headers: {
+        'Authorization': 'token ' + TOKEN
+      }
+    }).then((response) => {
+      callback(response);
+    });
 }
 
 exports.fetchFileList = (req, res) => {
