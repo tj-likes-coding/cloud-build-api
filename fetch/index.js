@@ -53,10 +53,10 @@ exports.fetchFileList = (req, res) => {
     
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) console.log(err);
-      console.log(result);
       if(result.length > 0) {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
+              console.log(row);
               res.json(row);
           }
         });
