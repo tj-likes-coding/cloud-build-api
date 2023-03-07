@@ -47,26 +47,20 @@ exports.fetchGitFile = (req, res) => {
 }
 
 exports.fetchFileList = (req, res) => {
-    console.log(__dirname);
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
-//     let json = fs.readFileSync("../db.txt", "utf-8", (data) => {return data;});
-//     json = JSON.parse(json);
-//     res.json(json);
-//     let data = json[pkgname];
-    
-//     if( data.author === author && data.appname === appname ) {
-//         res.json(data.files);
-//     }
     
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) throw err;
-      console.log(result);
+      if(result.length > 0) {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
               res.json(row);
           }
         });
+      } else {
+        throw "Package Not Found!";
+      }
     });
 }
