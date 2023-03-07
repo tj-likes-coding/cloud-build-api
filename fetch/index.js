@@ -57,8 +57,8 @@ exports.fetchFileList = (req, res) => {
         console.log(pkgname, author, appname);
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-              console.log(row);
               res.json(row);
+              res.end();
           }
         });
       } else {
