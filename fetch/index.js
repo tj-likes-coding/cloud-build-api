@@ -60,16 +60,13 @@ exports.fetchFileList = (req, res) => {
 //         res.json(data.files);
 //     }
     
-    let results;
-    
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) throw err;
-        results = result;
-    });
-    
-    results.forEach(row => {
-        if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-            res.json(row);
-        }
+      console.log(result);
+        result.forEach(row => {
+          if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
+              res.json(row);
+          }
+        });
     });
 }
