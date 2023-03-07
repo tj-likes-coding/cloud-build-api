@@ -42,9 +42,9 @@ exports.fetchGitFile = (req, res) => {
             const TOKEN = row.token;  
             const URL = row.repo + "/" + req.params.filename + "?token=" + TOKEN;
 
-              function callback(res) {
+              function callback(response) {
                  res.json({
-                  data: body
+                  data: response.text()
                  });
                 res.end();
               }
