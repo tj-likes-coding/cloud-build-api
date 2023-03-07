@@ -33,36 +33,33 @@ exports.fetchGitFile = (req, res) => {
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
-    let data;
     con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
     if (err) console.log(err);
       if(result.length > 0) {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-              data = row;
+              const URL = row.repo + "/" + req.params.filename;
+              const TOKEN = row.token;
+
+              function callback(res) {
+                 res.json({
+                  data: body
+                 });
+                res.end();
+              }
+
+              fetch(URL, {
+                headers: {
+                  'Authorization': 'token ' + TOKEN
+                }
+              }).then((response) => {
+                callback(response);
+              });
           }
         });
       } else {
         throw "Package Not Found!";
       }
-    });
-
-    const URL = data.repo + "/" + req.params.filename;
-    const TOKEN = data.token;
-
-    function callback(res) {
-       res.json({
-        data: body
-       });
-      res.end();
-    }
-
-    fetch(URL, {
-      headers: {
-        'Authorization': 'token ' + TOKEN
-      }
-    }).then((response) => {
-      callback(response);
     });
 }
 
