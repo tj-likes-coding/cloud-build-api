@@ -35,7 +35,6 @@ exports.fetchGitFile = (req, res) => {
 }
 
 exports.fetchFileList = (req, res) => {
-    console.log(process.getcwd());
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
