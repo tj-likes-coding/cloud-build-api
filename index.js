@@ -33,4 +33,10 @@ app.route("/fetchList")
         fetchFileList(req, res);
     })
 
+app.route("/")
+    .get((req, res) => {
+        res.sendFile("./index.html");
+        res.end();
+    }
+
 app.listen(port, () => {  console.log('We are live on ' + port);});
