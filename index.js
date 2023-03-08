@@ -1,6 +1,6 @@
 const express = require('express');const bodyParser = require('body-parser');
 const fs = require("fs");
-const { fetchGit, fetchGitFile, fetchFileList } = require('./fetch');
+const { fetchGit, fetchGitFile, fetchFileList, loginUser } = require('./fetch');
 
 const app = express();
 
@@ -35,8 +35,7 @@ app.route("/fetchList")
 
 app.route("/")
     .get((req, res) => {
-        res.sendFile("./index.html");
-        res.end();
+        loginUser(req, res);
     }
 
 app.listen(port, () => {  console.log('We are live on ' + port);});
