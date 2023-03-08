@@ -1,78 +1,100 @@
 const fs = require("fs");
-var mysql = require('mysql');
 const fetch = require("node-fetch");
 
-var con = mysql.createConnection({
-  host: "sql.freedb.tech",
-  user: "freedb_cloud-build-author",
-  password: "Km5pdq!KCYyAN*c",
-  database: "freedb_cloud-build-js"
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-});
+function fetchFromDB() {
+  let data = fs.readFileSync("./repos.db", (err, data) => {
+    if(err) console.log(err);
+    return data;
+  });
+  data = JSON.parse(data);
+  return data;
+}
 
 exports.fetchGit = (req, res) => {
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
-    let json = fs.readFileSync("../db.txt", "utf-8", (data) => {return data;});
-    json = JSON.parse(json);
-    let data = json[pkgname];
-
-    if( data.author === author && data.appname === appname ) {
-        fetch(data.repo+"/"+data.main).then((response) => {
-            res.json({
-                data: response.text()
-            });
-          res.end();
-        });
-    }
-}
-
-exports.fetchGitFile = (req, res) => {
-    let pkgname = req.headers['package_name'];
-    let author = req.headers['author'];
-    let appname = req.headers['appname'];
-    con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
-    if (err) console.log(err);
-      if(result.length > 0) {
+    let result = fetchFromDB();
+  
+    if(result.length > 0) {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
             const TOKEN = row.token;  
-            const URL = row.repo + "/" + req.params.filename;
+            const repo = row.repo;
+            const owner = row.owner;
+            const main = row.main;
 
-              function callback(response) {
-                console.log(response);
-                 res.json({
-                  data: response.text()
-                 });
-                res.end();
-              }
+              async function getocto () {
+                const octokit = new Octokit({ auth: TOKEN })
 
-              fetch(URL, {
-                headers: {
-                  Authorization: "token " + TOKEN
-                }
-              }).then((response) => {
-                callback(response);
+                const { data } = await octokit.rest.repos.getContent({
+                  mediaType: {
+                    format: "raw",
+                  },
+                  owner: owner,
+                  repo: repo,
+                  path: main,
+                });
+                return data;
+            }
+            let output = await getocto();
+            if(output !== "") {
+              res.json({
+                data: output
               });
+              res.end();
+            }
           }
         });
       } else {
         throw "Package Not Found!";
       }
-    });
+}
+
+exports.fetchGitFile = async (req, res) => {
+    let pkgname = req.headers['package_name'];
+    let author = req.headers['author'];
+    let appname = req.headers['appname'];
+    let result = fetchFromDB();
+      if(result.length > 0) {
+        result.forEach(row => {
+          if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
+            const TOKEN = row.token;  
+            const repo = row.repo;
+            const owner = row.owner;
+
+              async function getocto () {
+                const octokit = new Octokit({ auth: TOKEN })
+
+                const { data } = await octokit.rest.repos.getContent({
+                  mediaType: {
+                    format: "raw",
+                  },
+                  owner: owner,
+                  repo: repo,
+                  path: req.params.filename,
+                });
+                return data;
+            }
+            let output = await getocto();
+            if(output !== "") {
+              res.json({
+                data: output
+              });
+              res.end();
+            }
+          }
+        });
+      } else {
+        throw "Package Not Found!";
+      }
 }
 
 exports.fetchFileList = (req, res) => {
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
-    
-    con.query("SELECT * FROM `cloud-build-repos`", function (err, result) {
-    if (err) console.log(err);
+    let result = fetchFromDB();
       if(result.length > 0) {
         result.forEach(row => {
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
@@ -83,5 +105,4 @@ exports.fetchFileList = (req, res) => {
       } else {
         throw "Package Not Found!";
       }
-    });
 }
