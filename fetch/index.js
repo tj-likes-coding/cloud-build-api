@@ -1,10 +1,16 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { Octokit } = require("octokit");
+const { Octokit, App } = require("octokit");
 
 function fetchFromDB() {
   let data = require("./repos.json");
   return data;
+}
+
+exports.loginUser = (req, res) => {
+  res.sendFile("./index.html");
+  
+  res.end();
 }
 
 exports.fetchGit = async (req, res) => {
