@@ -17,13 +17,14 @@ exports.fetchGit = async (req, res) => {
         for(let i=0;i<result.length;i++) {
             let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-            const TOKEN = row.token;  
+            const token = row.token;  
             const repo = row.repo;
             const owner = row.owner;
             const main = row.main;
+            console.log(owner, repo);
 
               async function getocto () {
-                const octokit = new Octokit({ auth: TOKEN })
+                const octokit = new Octokit({ auth: token })
 
                 const { data } = await octokit.rest.repos.getContent({
                   mediaType: {
@@ -58,12 +59,12 @@ exports.fetchGitFile = async (req, res) => {
         for(let i=0;i<result.length;i++) {
             let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-            const TOKEN = row.token;  
+            const token = row.token;  
             const repo = row.repo;
             const owner = row.owner;
 
               async function getocto () {
-                const octokit = new Octokit({ auth: TOKEN })
+                const octokit = new Octokit({ auth: token })
 
                 const { data } = await octokit.rest.repos.getContent({
                   mediaType: {
