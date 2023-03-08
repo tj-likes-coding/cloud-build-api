@@ -10,7 +10,7 @@ function fetchFromDB() {
   return data;
 }
 
-exports.fetchGit = (req, res) => {
+exports.fetchGit = async (req, res) => {
     let pkgname = req.headers['package_name'];
     let author = req.headers['author'];
     let appname = req.headers['appname'];
