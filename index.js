@@ -36,6 +36,6 @@ app.route("/fetchList")
 app.route("/")
     .get((req, res) => {
         loginUser(req, res);
-    }
+    })
 
 app.listen(port, () => {  console.log('We are live on ' + port);});
