@@ -1,5 +1,6 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
+const Octokit = require("octokit");
 
 function fetchFromDB() {
   let data = require("./repos.json");
