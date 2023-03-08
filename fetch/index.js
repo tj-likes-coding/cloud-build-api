@@ -21,7 +21,7 @@ exports.fetchGit = async (req, res) => {
             const repo = row.repo;
             const owner = row.owner;
             const main = row.main;
-            console.log(owner, repo);
+            console.log(owner, repo, main, token);
 
               async function getocto () {
                 const octokit = new Octokit({ auth: token })
