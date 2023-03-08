@@ -3,6 +3,7 @@ const fs = require("fs");
 const { fetchGit, fetchGitFile, fetchFileList, loginUser } = require('./fetch');
 
 const app = express();
+app.use(express.static(`${__dirname}`))
 
 const port = process.env.PORT || 8000;
 
