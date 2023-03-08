@@ -1,0 +1,14 @@
+[
+  {
+    "owner": "tj-likes-coding",
+    "package_name": "com.toonspace3d.apk",
+    "appname": "ToonSpace 3D",
+    "author": "Tejas Nayak",
+    "repo": "testproject",
+    "token": "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",
+    "main": "main.js",
+    "files": [
+      "main.js"
+    ]
+  }
+]
