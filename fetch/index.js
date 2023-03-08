@@ -2,11 +2,7 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 
 function fetchFromDB() {
-  let data = fs.readFileSync("./repos.db", (err, data) => {
-    if(err) console.log(err);
-    return data;
-  });
-  data = JSON.parse(data);
+  let data = require("./repos.json");
   return data;
 }
 
