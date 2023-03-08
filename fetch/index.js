@@ -17,7 +17,8 @@ exports.fetchGit = async (req, res) => {
     let result = fetchFromDB();
   
     if(result.length > 0) {
-        result.forEach(row => {
+        for(let i=0;i<result.length;i++) {
+            let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
             const TOKEN = row.token;  
             const repo = row.repo;
@@ -45,7 +46,7 @@ exports.fetchGit = async (req, res) => {
               res.end();
             }
           }
-        });
+        };
       } else {
         throw "Package Not Found!";
       }
@@ -57,7 +58,8 @@ exports.fetchGitFile = async (req, res) => {
     let appname = req.headers['appname'];
     let result = fetchFromDB();
       if(result.length > 0) {
-        result.forEach(row => {
+        for(let i=0;i<result.length;i++) {
+            let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
             const TOKEN = row.token;  
             const repo = row.repo;
@@ -84,7 +86,7 @@ exports.fetchGitFile = async (req, res) => {
               res.end();
             }
           }
-        });
+        };
       } else {
         throw "Package Not Found!";
       }
