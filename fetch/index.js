@@ -1,6 +1,6 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { Octokit, App } = require("octokit");
+const { Octokit } = require("octokit");
 
 function fetchFromDB() {
   let data = require("./repos.json");
@@ -49,8 +49,10 @@ exports.fetchGit = async (req, res) => {
               });
               res.end();
             }
+            break;
           }
         };
+        return;
       } else {
         throw "Package Not Found!";
       }
@@ -89,8 +91,10 @@ exports.fetchGitFile = async (req, res) => {
               });
               res.end();
             }
+            break;
           }
         };
+        return;
       } else {
         throw "Package Not Found!";
       }
