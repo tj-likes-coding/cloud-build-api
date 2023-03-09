@@ -1,9 +1,10 @@
 const express = require('express');const bodyParser = require('body-parser');
 const fs = require("fs");
+const path = require("path");
 const { fetchGit, fetchGitFile, fetchFileList, loginUser } = require('./fetch');
 
 const app = express();
-app.use(express.static(`${__dirname}`))
+app.use(express.static(path.join(__dirname, "public")));
 
 const port = process.env.PORT || 8000;
 
