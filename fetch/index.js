@@ -91,9 +91,6 @@ exports.fetchGitFile = async (req, res) => {
               octokit = new Octokit({auth: token});
               octokitCache[token] = octokit;
             }
-            
-            var b = new Buffer(req.params.filename, 'base64')
-            var s = b.toString();
 
             const { data } = await octokit.rest.repos.getContent({
               mediaType: {
@@ -101,7 +98,7 @@ exports.fetchGitFile = async (req, res) => {
               },
               owner: owner,
               repo: repo,
-              path: s
+              path: decodeURIComponent(req.params.filename)
             });
 
             if(data !== "") {
