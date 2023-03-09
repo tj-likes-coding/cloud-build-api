@@ -24,7 +24,7 @@ exports.fetchGit = async (req, res) => {
         for(let i=0;i<result.length;i++) {
             let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-            const token = row.token;  
+            const token = process.env.GIT_TOKEN;  
             const repo = row.repo;
             const owner = row.owner;
             const main = row.main;
@@ -78,7 +78,7 @@ exports.fetchGitFile = async (req, res) => {
         for(let i=0;i<result.length;i++) {
             let row = result[i];
           if(row['package_name'] === pkgname && row['appname'] === appname && row['author'] === author) {
-            const token = row.token;  
+            const token = process.env.GIT_TOKEN;  
             const repo = row.repo;
             const owner = row.owner;
 
