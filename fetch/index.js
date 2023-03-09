@@ -7,9 +7,10 @@ function fetchFromDB() {
   return data;
 }
 
+let octokitCache = {};
+
 exports.loginUser = (req, res) => {
   res.sendFile("index.html");
-  
   res.end();
 }
 
@@ -27,28 +28,38 @@ exports.fetchGit = async (req, res) => {
             const repo = row.repo;
             const owner = row.owner;
             const main = row.main;
-            console.log(owner, repo, main, token);
 
-              async function getocto () {
-                const octokit = new Octokit({ auth: token })
-
-                const { data } = await octokit.rest.repos.getContent({
-                  mediaType: {
-                    format: "raw",
-                  },
-                  owner: owner,
-                  repo: repo,
-                  path: main,
-                });
-                return data;
+            // check if an Octokit instance for this token exists in the cache
+            let octokit;
+            if(octokitCache[token]) {
+              octokit = octokitCache[token];
+            } else {
+              // create a new Octokit instance for this token and add it to the cache
+              octokit = new Octokit({auth: token});
+              octokitCache[token] = octokit;
             }
-            let output = await getocto();
-            if(output !== "") {
+
+            const { data } = await octokit.rest.repos.getContent({
+              mediaType: {
+                format: "raw"
+              },
+              owner: owner,
+              repo: repo,
+              path: main
+            });
+
+            if(data !== "") {
               res.json({
-                data: output
+                data: data
               });
               res.end();
             }
+
+            // Update token in the cache if it has changed
+            if(octokitCache[token] && octokitCache[token].auth !== token) {
+              octokitCache[token] = new Octokit({auth: token});
+            }
+
             break;
           }
         };
@@ -71,26 +82,38 @@ exports.fetchGitFile = async (req, res) => {
             const repo = row.repo;
             const owner = row.owner;
 
-              async function getocto () {
-                const octokit = new Octokit({ auth: token })
-
-                const { data } = await octokit.rest.repos.getContent({
-                  mediaType: {
-                    format: "raw",
-                  },
-                  owner: owner,
-                  repo: repo,
-                  path: req.params.filename,
-                });
-                return data;
+            // check if an Octokit instance for this token exists in the cache
+            let octokit;
+            if(octokitCache[token]) {
+              octokit = octokitCache[token];
+            } else {
+              // create a new Octokit instance for this token and add it to the cache
+              octokit = new Octokit({auth: token});
+              octokitCache[token] = octokit;
             }
-            let output = await getocto();
-            if(output !== "") {
+
+            const { data } = await octokit.rest.repos.getContent({
+              mediaType: {
+                format: "raw"
+              },
+              owner: owner,
+              repo: repo,
+              path: btoa(req.params.filename)
+            });
+
+            if(data !== "") {
               res.json({
-                data: output
+                data: data
               });
               res.end();
             }
+
+            // Update token in the cache if it has changed
+            if(octokitCache[token] && octokitCache[token].auth !== token) {
+              octokitCache[token] = new Octokit({auth: token});
+            }
+  
+
             break;
           }
         };
